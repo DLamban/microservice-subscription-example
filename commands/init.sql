@@ -1,3 +1,4 @@
+-- Create basic database with just a table to hold the subscription records
 CREATE DATABASE IF NOT EXISTS demosubscriptiondb;
 USE demosubscriptiondb;
 CREATE TABLE IF NOT EXISTS subscriptions (

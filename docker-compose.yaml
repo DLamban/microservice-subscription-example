@@ -20,7 +20,7 @@ services:
       - back-notused:/opt/app/node_modules
     networks:
       - public
-      - private      
+      - private
   subscription-microservice:
     build:
       args:
@@ -40,9 +40,9 @@ services:
       - db-password
       - jwt-master-key
     volumes:
-      - ./subscription-service/src:/code/src:ro
-      - ./subscription-service/package.json:/code/package.json
-      - ./subscription-service/package-lock.json:/code/package-lock.json
+      - ./subscription-microservice/src:/code/src:ro
+      - ./subscription-microservice/package.json:/code/package.json
+      - ./subscription-microservice/package-lock.json:/code/package-lock.json
       - back-notused:/opt/app/node_modules
     networks:
       - public
