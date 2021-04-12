@@ -1,27 +1,48 @@
 version: "3.7"
 services:
-  backend:
+  api-gateway:
     build:
       args:
       - NODE_ENV=development
-      context: backend
+      context: api-gateway
     command: npm run start-watch
     environment:
-      - DATABASE_DB=example
+      - JWT_MASTER_KEY=/run/secrets/jwt-master-key
+      - NODE_ENV=development
+    ports:
+      - 4000:4000
+    secrets:      
+      - jwt-master-key
+    volumes:
+      - ./api-gateway/src:/code/src:ro
+      - ./api-gateway/package.json:/code/package.json
+      - ./api-gateway/package-lock.json:/code/package-lock.json
+      - back-notused:/opt/app/node_modules
+    networks:
+      - public
+      - private      
+  subscription-microservice:
+    build:
+      args:
+      - NODE_ENV=development
+      context: subscription-microservice
+    command: npm run start-watch
+    environment:
+      - DATABASE_DB=demosubscriptiondb
       - DATABASE_USER=root
       - DATABASE_PASSWORD=/run/secrets/db-password
+      - JWT_MASTER_KEY=/run/secrets/jwt-master-key
       - DATABASE_HOST=db
       - NODE_ENV=development
     ports:
-      - 80:80
-      - 9229:9229
-      - 9230:9230
+      - 4001:4001      
     secrets:
       - db-password
+      - jwt-master-key
     volumes:
-      - ./backend/src:/code/src:ro
-      - ./backend/package.json:/code/package.json
-      - ./backend/package-lock.json:/code/package-lock.json
+      - ./subscription-service/src:/code/src:ro
+      - ./subscription-service/package.json:/code/package.json
+      - ./subscription-service/package-lock.json:/code/package-lock.json
       - back-notused:/opt/app/node_modules
     networks:
       - public
@@ -31,29 +52,18 @@ services:
   db:
     image: mysql:8.0.19
     command: '--default-authentication-plugin=mysql_native_password'
+    command: mysqld --init-file="/tmp/commands/init.sql"
     restart: always
     secrets:
       - db-password
     volumes:
       - db-data:/var/lib/mysql
+      - ./commands:/tmp/commands
     networks:
       - private
     environment:
-      - MYSQL_DATABASE=example
+      - MYSQL_DATABASE=demosubscriptiondb
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db-password
-  frontend:
-    build:
-      context: frontend
-      target: development
-    ports:
-      - 3000:3000
-    volumes:
-      - ./frontend/src:/code/src
-      - /code/node_modules
-    networks:
-      - public
-    depends_on:
-      - backend
 networks:
   public:
   private:
@@ -63,3 +73,5 @@ volumes:
 secrets:
   db-password:
     file: db/password.txt
+  jwt-master-key:
+    file: secrets/jwttoken.txt
