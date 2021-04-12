@@ -14,7 +14,7 @@ module.exports = {
       : null
   },
   port: process.env.PORT,
-  jwtkey: process.env.JWTKEY
-    ? readFileSync(process.env.JWTKEY)
+  jwtkey: process.env.JWT_MASTER_KEY
+    ? readFileSync(process.env.JWT_MASTER_KEY)
     : null
 };
