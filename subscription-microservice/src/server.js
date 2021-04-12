@@ -6,8 +6,6 @@ const express = require("express");
 
 const morgan = require("morgan");
 
-const database = require("./database");
-
 // Api
 const app = express();
 

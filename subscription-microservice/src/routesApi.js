@@ -13,6 +13,13 @@ function validateSubscriptionFields(body) {
   return true;
 }
 
+function InsertIntoDB(table, values) {
+  return database(table).insert(values)
+    .then(function (result) {
+      return ({ success: true, message: 'Subscribed!' });
+    }).catch(err => { return err });
+}
+
 router.get("/dbtest", function (req, res, next) {
   database.from('subscriptions').select('*').then((rows) => {
     res.json(rows);
@@ -24,11 +31,18 @@ router.get("/dbtest", function (req, res, next) {
 });
 
 router.post("/subscribeUser",
-// authorize("user"), 
-function (req, res) {
-  if (validateSubscriptionFields(req.body)) {
-    res.send('okei');
-  }
-  res.send({ 'error': 'missing required fields' });
-})
+  // authorize("user"), 
+  function (req, res) {
+    if (validateSubscriptionFields(req.body)) {
+      InsertIntoDB('subscriptions', req.body).then(insertRes =>
+        res.send(insertRes)
+      ).catch(err => {
+        console.log(err);
+        res.status(500).send(err);
+      });
+    }
+    else {
+      res.send({ 'error': 'missing required fields' });
+    }
+  })
 module.exports = router;

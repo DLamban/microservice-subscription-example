@@ -2,7 +2,9 @@
 CREATE DATABASE IF NOT EXISTS demosubscriptiondb;
 USE demosubscriptiondb;
 CREATE TABLE IF NOT EXISTS subscriptions (
-  email VARCHAR(50) NOT NULL, 
+  id INT NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (id),
+  email VARCHAR(50) NOT NULL UNIQUE, 
   name VARCHAR(20), 
   gender VARCHAR(20),   
   agreement BOOLEAN NOT NULL, 
@@ -10,3 +12,4 @@ CREATE TABLE IF NOT EXISTS subscriptions (
   birth DATE NOT NULL);
 
 
+INSERT INTO subscriptions VALUES ('dsadsa@fdas.com','dani','male',true,2,'1984-08-12');
