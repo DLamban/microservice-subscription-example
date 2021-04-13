@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router();
-
+const express = require('express');
 const authorize = require('./authorize');
 const database = require("./database");
+
+var router = express.Router();
 
 // Helpers
 const requiredFields = ['email', 'birth', 'newsletterId', 'agreement'];
@@ -29,6 +29,14 @@ function RemoveFromDB(table, email) {
     }).catch(err => { return err });
 }
 
+/**
+ * @swagger
+ *
+ * /getDetailsSubscription:
+ *   get:
+ *     summary: Retrieve subscription details
+ *     description:  Retrieve subscription details
+ */
 router.get("/getAllSubscriptions",
  authorize('admin'), 
 function (req, res, next) {
@@ -41,12 +49,20 @@ function (req, res, next) {
   })
 });
 
+/**
+ * @swagger
+ *
+ * /getDetailsSubscription:
+ *   get:
+ *     summary: Retrieve subscription details
+ *     description:  Retrieve subscription details
+ */
 router.post("/getDetailsSubscriptions",
   //authorize('admin'), 
   function (req, res, next) {
     if (!req.body.email) res.status(400).send({ 'error': 'missing required fields' });
     database.from('subscriptions').select('*').where("email", req.body.email).then((rows) => {
-      res.json({ success: true, message: rows });
+      res.json({ success: true, info: rows });
       next(res);
     }).catch((err) => {
       res.status = err.status;
@@ -54,6 +70,14 @@ router.post("/getDetailsSubscriptions",
     })
   });
 
+/**
+ * @swagger
+ *
+ * /cancelSubscription:
+ *   get:
+ *     summary: Retrieve subscription details
+ *     description:  Retrieve subscription details
+ */
 router.post("/cancelSubscription",
   // authorize("guest"), 
   function (req, res) {
@@ -65,7 +89,15 @@ router.post("/cancelSubscription",
       res.status(500).send(err);
     });
   });
-
+  
+/**
+ * @swagger
+ *
+ * /subscribeUser:
+ *   post:
+ *     produces:
+ *       - application/json
+ */
 router.post("/subscribeUser",
   // authorize("guest"), 
   function (req, res) {

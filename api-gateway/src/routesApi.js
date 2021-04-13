@@ -1,10 +1,9 @@
 const express = require("express");
-
-var router = express.Router();
 const fetch = require('node-fetch');
 
 const { jwtkey } = require('./config');
 var jwt = require('jsonwebtoken')
+var router = express.Router();
 
 /**
  * @swagger
