@@ -15,7 +15,7 @@ app.use(bodyParser.json())
 const apiRoutes = require("./routesApi");
 
 
-// Middleware
+//Middleware
 // app.use((req, res, next) => {
 //   const bearerHeader = req.headers['authorization'];
 //   let token = '';
@@ -50,46 +50,6 @@ app.get("/healthz", function (req, res) {
   // if you want, you should be able to restrict this to localhost (include ipv4 and ipv6)
   res.send("I am happy and healthy\n");
 });
-
-// app.get("/verifyToken", function (req, res, next) {
-
-//   const bearerHeader = req.headers['authorization'];
-//   let token = '';
-//   if (bearerHeader) {
-//     const bearer = bearerHeader.split(' ');
-//     token = bearer[1];
-//   }
-
-//   if (token) {
-//     jwt.verify(token, jwtkey, (err, decoded) => {
-//       if (err) {
-//         res.statusCode(401);
-//         return res.json({ mensaje: 'Token inválida' });
-//       } else {
-//         res.send('gud token');
-//         next();
-//       }
-//     });
-//   } else {
-//     res.send({
-//       mensaje: 'Token no proveída.'
-//     });
-//   }
-// });
-
-// app.get("/getToken", function (req, res, next) {
-//   const payload = {
-//     check: true
-//   };
-//   const token = jwt.sign(payload, jwtkey, {
-//     expiresIn: 1440
-//   });
-//   res.json({
-//     mensaje: 'Autenticación correcta',
-//     token: token
-//   });
-// });
-
 
 
 module.exports = app;

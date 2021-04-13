@@ -17,7 +17,6 @@ services:
       - ./api-gateway/src:/code/src:ro
       - ./api-gateway/package.json:/code/package.json
       - ./api-gateway/package-lock.json:/code/package-lock.json
-      - back-notused:/opt/app/node_modules
     networks:
       - public
       - private
@@ -43,7 +42,6 @@ services:
       - ./subscription-microservice/src:/code/src:ro
       - ./subscription-microservice/package.json:/code/package.json
       - ./subscription-microservice/package-lock.json:/code/package-lock.json
-      - back-notused:/opt/app/node_modules
     networks:
       - public
       - private

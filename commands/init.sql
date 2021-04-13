@@ -10,6 +10,3 @@ CREATE TABLE IF NOT EXISTS subscriptions (
   agreement BOOLEAN NOT NULL, 
   newsletterId INT NOT NULL, 
   birth DATE NOT NULL);
-
-
-INSERT INTO subscriptions VALUES ('dsadsa@fdas.com','dani','male',true,2,'1984-08-12');
