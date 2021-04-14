@@ -5,7 +5,7 @@ const server = app.listen(port, function() {
   console.log("Webserver is ready");
 });
 
-// quit on ctrl-c when running docker in terminal
+
 process.on("SIGINT", function onSigint() {
   console.info(
     "Got SIGINT (aka ctrl-c in docker). Graceful shutdown ",

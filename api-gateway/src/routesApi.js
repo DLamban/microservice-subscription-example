@@ -53,16 +53,49 @@ router.post("/subscribe", function (req, res, next) {
       if (response.status !== 400) {
         res.status(response.status);
       }
-      return response.json();
-    })
-    .then(result => {
-      res.send(result)
+      fetch('http://email-microservice:4002/sendEmail', {
+        method: 'POST',
+        headers: {
+          'Authorization': req.headers['authorization'],
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(req.body)
+      })
+      .then(responseInner=> {
+        console.log(responseInner);
+        if (responseInner.status!=400){
+          res.send(responseInner.body);
+        }
+        else{
+          res.send('naice');
+        }
+      })
+      .catch(err=>res.send('err'));
+
+
+
+      // SendEmailPromise(req.body.email, req)
+      //   .then(response => {
+      //     res.json(response);
+      //     res.send();
+      //   })
+      //   .catch(err => next(err));    
     })
     .catch(err => {
       next(err);
     });
 });
 
+function SendEmailPromise(email, req) {
+  return fetch('http://email-microservice:4002/sendEmail', {
+    method: 'POST',
+    headers: {
+      'Authorization': req.headers['authorization'],
+      'Content-Type': 'application/json'
+    },
+    body: { email }
+  });
+};
 /**
  * @swagger
  *
@@ -76,7 +109,7 @@ router.post("/subscribe", function (req, res, next) {
  *         required: true
  *         type: string
  */
- router.post("/cancelSubscription", function (req, res, next) {
+router.post("/cancelSubscription", function (req, res, next) {
   fetch('http://subscription-microservice:4001/cancelSubscription', {
     method: 'POST',
     headers: {
@@ -107,7 +140,7 @@ router.post("/subscribe", function (req, res, next) {
  *     summary: Retrieve subscription details
  *     description:  Retrieve subscription details
  */
- router.post("/getDetailsSubscription", function (req, res, next) {
+router.post("/getDetailsSubscription", function (req, res, next) {
   fetch('http://subscription-microservice:4001/getDetailsSubscription', {
     method: 'POST',
     headers: {
@@ -154,10 +187,7 @@ router.get("/getAllSubscriptions", function (req, res, next) {
     .then(result => {
       res.send(result)
     })
-    .catch(err => {
-      console.log(err);
-      next(err);
-    });
+    .catch(err => next(err));
 });
 
 /**

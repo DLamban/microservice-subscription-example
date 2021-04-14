@@ -47,6 +47,33 @@ services:
       - private
     depends_on:
       - db
+  email-microservice:
+    build:
+      args:
+      - NODE_ENV=development
+      context: email-microservice
+    command: npm run start-watch
+    environment:
+      - DATABASE_DB=demosubscriptiondb
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=/run/secrets/db-password
+      - JWT_MASTER_KEY=/run/secrets/jwt-master-key
+      - DATABASE_HOST=db
+      - NODE_ENV=development
+    ports:
+      - 4002:4002    
+    secrets:
+      - db-password
+      - jwt-master-key
+    volumes:
+      - ./email-microservice/src:/code/src:ro
+      - ./email-microservice/package.json:/code/package.json
+      - ./email-microservice/package-lock.json:/code/package-lock.json
+    networks:
+      - public
+      - private
+    depends_on:
+      - db
   db:
     image: mysql:8.0.19
     command: '--default-authentication-plugin=mysql_native_password'

@@ -12,12 +12,12 @@ const app = express();
 app.use(morgan("common"));
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-
 const apiRoutes = require("./routesApi");
 
 app.get("/healthz", function (req, res) {
   res.send("I am happy and healthy\n");
 });
+
 
 //Middleware
 app.use((req, res, next) => {
@@ -44,6 +44,9 @@ app.use((req, res, next) => {
 
 
 app.use("/", apiRoutes);
+
+
+
 
 
 

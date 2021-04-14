@@ -7,9 +7,7 @@ var router = express.Router();
 // Helpers
 const requiredFields = ['email', 'birth', 'newsletterId', 'agreement'];
 function validateSubscriptionFields(body) {
-  console.log(body);
   for (const fieldName of requiredFields) {
-    console.log(fieldName);
     if (!body[fieldName]) return false;
   }
   return true;
@@ -19,7 +17,7 @@ function InsertIntoDB(table, values) {
   return database(table).insert(values)
     .then(function (result) {
       return ({ success: true, message: 'Subscribed!' });
-    }).catch(err => { return err });
+    }).catch(err => { return {success:false, message:err }});
 }
 
 function RemoveFromDB(table, email) {
