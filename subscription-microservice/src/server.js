@@ -29,13 +29,13 @@ app.use((req, res, next) => {
     token = bearer[1];
   } else {
     res.status(401);
-    return res.json({ error: 'Auth error',message:"missing token" });
+    return res.json({ error: 'Auth error - subscription',message:"missing token" });
   }
 
   jwt.verify(token, jwtkey, (err, decoded) => {
     if (err) {
       res.status(401);
-      return res.json({ error: 'Auth error', message: err });
+      return res.json({ error: 'Auth error - subscription', message: err });
     } else {
       next();
     }

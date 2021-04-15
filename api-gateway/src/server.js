@@ -42,7 +42,7 @@ const swaggerSpecification = swaggerJsdoc(options);
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpecification));
 
 app.use(function (err, req, res, next) {
-  console.error(err.stack);
+  console.error('error', err);
   switch (err.status) {
     case 400:
       res.status(400).send({ error: "Bad request", debug: err })

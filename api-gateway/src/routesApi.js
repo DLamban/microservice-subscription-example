@@ -40,7 +40,8 @@ var router = express.Router();
  *         required: true
  *         type: integer
  */
-router.post("/subscribe", function (req, res, next) {
+router.post("/subscribe", (req, res, next) => {
+
   fetch('http://subscription-microservice:4001/subscribeUser', {
     method: 'POST',
     headers: {
@@ -48,11 +49,11 @@ router.post("/subscribe", function (req, res, next) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(req.body)
-  })
-    .then(response => {
-      if (response.status !== 400) {
-        res.status(response.status);
-      }
+  }).then((response) => {    
+    if (response.status != 200) {
+      res.status(response.status);
+      return response.json().then(json => res.send(json)).catch(err=>next(err));
+    } else {
       fetch('http://email-microservice:4002/sendEmail', {
         method: 'POST',
         headers: {
@@ -61,41 +62,13 @@ router.post("/subscribe", function (req, res, next) {
         },
         body: JSON.stringify(req.body)
       })
-      .then(responseInner=> {
-        console.log(responseInner);
-        if (responseInner.status!=400){
-          res.send(responseInner.body);
-        }
-        else{
-          res.send('naice');
-        }
-      })
-      .catch(err=>res.send('err'));
-
-
-
-      // SendEmailPromise(req.body.email, req)
-      //   .then(response => {
-      //     res.json(response);
-      //     res.send();
-      //   })
-      //   .catch(err => next(err));    
-    })
-    .catch(err => {
-      next(err);
-    });
+      .then(responseEmailServ=>{
+        return responseEmailServ.json();
+      }).then(resultJson=>res.send(resultJson))      
+    }
+  })      
 });
 
-function SendEmailPromise(email, req) {
-  return fetch('http://email-microservice:4002/sendEmail', {
-    method: 'POST',
-    headers: {
-      'Authorization': req.headers['authorization'],
-      'Content-Type': 'application/json'
-    },
-    body: { email }
-  });
-};
 /**
  * @swagger
  *

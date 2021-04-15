@@ -9,7 +9,7 @@ function checkEmail(email, done) {
   return database("subscriptions").select('*').where("email", email)
     .then(function (rows) {
       if (rows.length == 0) { return done(Error('Email does not exists')) }
-      return done(null, { success: true, message: 'Subscribed!' });
+      return done(null, { success: true, message: 'Email exists, sending!' });
     })
 }
 
@@ -29,6 +29,7 @@ router.post("/sendEmail",
       if (err) 
         res.status(404).send({error:'Email does not exists'});      
       else
+        console.log(result);
         res.send(result);
     })
 

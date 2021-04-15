@@ -15,8 +15,8 @@ function validateSubscriptionFields(body) {
 
 function InsertIntoDB(table, values) {
   return database(table).insert(values)
-    .then(function (result) {
-      return ({ success: true, message: 'Subscribed!' });
+    .then(function () {      
+      return ({ success: true, message: 'Subscribed email:  ' + values.email });
     }).catch(err => { return {success:false, message:err }});
 }
 
@@ -83,7 +83,6 @@ router.post("/cancelSubscription",
     RemoveFromDB('subscriptions', req.body.email).then(delRes =>
       res.send(delRes)
     ).catch(err => {
-      console.log(err);
       res.status(500).send(err);
     });
   });
@@ -101,9 +100,13 @@ router.post("/subscribeUser",
   function (req, res) {
     if (validateSubscriptionFields(req.body)) {
       InsertIntoDB('subscriptions', req.body).then(insertRes =>
-        res.send(insertRes)
-      ).catch(err => {
-        console.log(err);
+        {
+        if (insertRes.success == false){
+          res.status(400).send(insertRes);
+        }else{
+          res.send(insertRes)}
+        }        
+      ).catch(err => {        
         res.status(500).send(err);
       });
     }
