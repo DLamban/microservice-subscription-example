@@ -18,15 +18,15 @@ describe("API /healthz", () => {
   });
 });
 
-describe("API /", () => {
-  it("it should return Welcome message", done => {
+describe("API /api/getAdminToken", () => {
+  it("it should return an token", done => {
     chai
       .request(app)
-      .get("/")
+      .get("/api/getAdminToken")
       .end((err, res) => {
         res.should.have.status(200);
-        res.should.to.be.html;
-        res.text.should.be.equal("Hello Docker World\n");
+        res.should.to.be.json;        
+        res.json.body.token.should.exist;
         done();
       });
   });
