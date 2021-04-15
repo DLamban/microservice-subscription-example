@@ -25,7 +25,7 @@ const options = {
       title: 'Public api service',
       version: '1.0.0',
       description:
-        'This is a REST API application made with Express. It retrieves data from JSONPlaceholder.'
+        'REST api build around microservices, this api is the public entry point'
     },
     servers: [
       {

@@ -77,7 +77,6 @@ router.post("/getDetailsSubscriptions",
  *     description:  Retrieve subscription details
  */
 router.post("/cancelSubscription",
-  // authorize("guest"), 
   function (req, res) {
     if (!req.body.email) res.status(400).send({ 'error': 'missing required fields' });
     RemoveFromDB('subscriptions', req.body.email).then(delRes =>
@@ -95,8 +94,7 @@ router.post("/cancelSubscription",
  *     produces:
  *       - application/json
  */
-router.post("/subscribeUser",
-  // authorize("guest"), 
+router.post("/subscribeUser", 
   function (req, res) {
     if (validateSubscriptionFields(req.body)) {
       InsertIntoDB('subscriptions', req.body).then(insertRes =>

@@ -22,8 +22,7 @@ function checkEmail(email, done) {
  *       - application/json
  */
 router.post("/sendEmail",
-  function (req, res) {
-    // authorize("guest"), 
+  function (req, res) {    
     if (!req.body.email) { res.status(400).send({ error: 'Missing email parameter' }) }
     checkEmail(req.body.email, (err, result) => {
       if (err) 
