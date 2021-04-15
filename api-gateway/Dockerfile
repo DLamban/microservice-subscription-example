@@ -11,11 +11,10 @@ WORKDIR /code
 
 ARG PORT=4000
 ENV PORT $PORT
-EXPOSE 4000
 
 COPY package.json /code/package.json
 COPY package-lock.json /code/package-lock.json
-
+RUN npm install
 RUN npm ci
 
 # check every 30s to ensure this service returns HTTP 200
