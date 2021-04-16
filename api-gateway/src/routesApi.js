@@ -1,15 +1,59 @@
 const express = require("express");
-const fetch = require('node-fetch');
+const fetch = require("node-fetch");
 
-const { jwtkey } = require('./config');
-var jwt = require('jsonwebtoken')
+const { jwtkey } = require("./config");
+var jwt = require("jsonwebtoken")
 var router = express.Router();
+
+/**
+ * @swagger
+ * /getGuestToken:
+ *   get:
+ *     summary: Retrieve a guest token to authorize api calls
+ *     description: Retrieve a guest token to authorize api calls
+*/
+router.get("/getGuestToken", function (req, res, next) {
+  const payload = {
+    check: true,
+    role: "guest"
+  };
+  const token = jwt.sign(payload, jwtkey, {
+    expiresIn: 1440
+  });
+  res.json({
+    message: "Successfull authorization",
+    token: token
+  });
+});
+
+/**
+ * @swagger
+ * /getAdminToken:
+ *   get:
+ *     summary: Retrieve an admin token to authorize api calls
+ *     description: Retrieve a token with admin rights
+*/
+router.get("/getAdminToken", function (req, res, next) {
+  const payload = {
+    check: true,
+    role: "admin"
+  };
+  const token = jwt.sign(payload, jwtkey, {
+    expiresIn: 1440
+  });
+  res.json({
+    message: "Successfull authorization",
+    token: token
+  });
+});
 
 /**
  * @swagger
  *
  * /subscribe:
  *   post:
+ *     summary: Subscribe user
+ *     description:  Subscribe user, 
  *     produces:
  *       - application/json
  *     parameters:
@@ -41,12 +85,11 @@ var router = express.Router();
  *         type: integer
  */
 router.post("/subscribe", (req, res, next) => {
-
-  fetch('http://subscription-microservice:4001/subscribeUser', {
-    method: 'POST',
+  fetch("http://subscription-microservice:4001/subscribeUser", {
+    method: "POST",
     headers: {
-      'Authorization': req.headers['authorization'],
-      'Content-Type': 'application/json'
+      "Authorization": req.headers["authorization"],
+      "Content-Type": "application/json"
     },
     body: JSON.stringify(req.body)
   }).then((response) => {    
@@ -54,11 +97,11 @@ router.post("/subscribe", (req, res, next) => {
       res.status(response.status);
       return response.json().then(json => res.send(json)).catch(err=>next(err));
     } else {
-      fetch('http://email-microservice:4002/sendEmail', {
-        method: 'POST',
+      fetch("http://email-microservice:4002/sendEmail", {
+        method: "POST",
         headers: {
-          'Authorization': req.headers['authorization'],
-          'Content-Type': 'application/json'
+          "Authorization": req.headers["authorization"],
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(req.body)
       })
@@ -74,6 +117,8 @@ router.post("/subscribe", (req, res, next) => {
  *
  * /cancelSubscription:
  *   post:
+ *     summary: cancel subscription
+ *     description:  Cancel subscription, requires the email
  *     produces:
  *       - application/json
  *     parameters:
@@ -83,11 +128,11 @@ router.post("/subscribe", (req, res, next) => {
  *         type: string
  */
 router.post("/cancelSubscription", function (req, res, next) {
-  fetch('http://subscription-microservice:4001/cancelSubscription', {
-    method: 'POST',
+  fetch("http://subscription-microservice:4001/cancelSubscription", {
+    method: "POST",
     headers: {
-      'Authorization': req.headers['authorization'],
-      'Content-Type': 'application/json'
+      "Authorization": req.headers["authorization"],
+      "Content-Type": "application/json"
     },
     body: JSON.stringify(req.body)
   })
@@ -109,16 +154,16 @@ router.post("/cancelSubscription", function (req, res, next) {
  * @swagger
  *
  * /getDetailsSubscription:
- *   get:
+ *   post:
  *     summary: Retrieve subscription details
  *     description:  Retrieve subscription details
  */
 router.post("/getDetailsSubscription", function (req, res, next) {
-  fetch('http://subscription-microservice:4001/getDetailsSubscription', {
-    method: 'POST',
+  fetch("http://subscription-microservice:4001/getDetailsSubscription", {
+    method: "POST",
     headers: {
-      'Authorization': req.headers['authorization'],
-      'Content-Type': 'application/json'
+      "Authorization": req.headers["authorization"],
+      "Content-Type": "application/json"
     },
     body: JSON.stringify(req.body)
   })
@@ -141,14 +186,14 @@ router.post("/getDetailsSubscription", function (req, res, next) {
  * /getAllSubscriptions:
  *   get:
  *     summary: Retrieve all subscriptions
- *     description: Retrieve a guest token to authorize api calls, requires admin privileges
+ *     description: Retrieve all subscriptions, requires admin privileges
 */
 router.get("/getAllSubscriptions", function (req, res, next) {
-  fetch('http://subscription-microservice:4001/getAllSubscriptions', {
-    method: 'GET',
+  fetch("http://subscription-microservice:4001/getAllSubscriptions", {
+    method: "GET",
     headers: {
-      'Authorization': req.headers['authorization'],
-      'Content-Type': 'application/json'
+      "Authorization": req.headers["authorization"],
+      "Content-Type": "application/json"
     },
   })
     .then(response => {
@@ -161,48 +206,6 @@ router.get("/getAllSubscriptions", function (req, res, next) {
       res.send(result)
     })
     .catch(err => next(err));
-});
-
-/**
- * @swagger
- * /getGuestToken:
- *   get:
- *     summary: Retrieve a guest token to authorize api calls
- *     description: Retrieve a guest token to authorize api calls
-*/
-router.get("/getGuestToken", function (req, res, next) {
-  const payload = {
-    check: true,
-    role: "guest"
-  };
-  const token = jwt.sign(payload, jwtkey, {
-    expiresIn: 1440
-  });
-  res.json({
-    message: 'Successfull authorization',
-    token: token
-  });
-});
-
-/**
- * @swagger
- * /getAdminToken:
- *   get:
- *     summary: Retrieve an admin token to authorize api calls
- *     description: Retrieve an admin token to authorize api calls
-*/
-router.get("/getAdminToken", function (req, res, next) {
-  const payload = {
-    check: true,
-    role: "admin"
-  };
-  const token = jwt.sign(payload, jwtkey, {
-    expiresIn: 1440
-  });
-  res.json({
-    message: 'Successfull authorization',
-    token: token
-  });
 });
 
 module.exports = router;

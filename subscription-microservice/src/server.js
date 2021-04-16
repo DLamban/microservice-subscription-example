@@ -1,6 +1,6 @@
-var jwt = require('jsonwebtoken')
-var bodyParser = require('body-parser')
-const { jwtkey } = require('./config');
+var jwt = require("jsonwebtoken")
+var bodyParser = require("body-parser")
+const { jwtkey } = require("./config");
 
 const express = require("express");
 
@@ -21,21 +21,21 @@ app.get("/healthz", function (req, res) {
 
 //Middleware
 app.use((req, res, next) => {
-  const bearerHeader = req.headers['authorization'];
-  let token = '';
+  const bearerHeader = req.headers["authorization"];
+  let token = "";
   
   if (bearerHeader) {
-    const bearer = bearerHeader.split(' ');
+    const bearer = bearerHeader.split(" ");
     token = bearer[1];
   } else {
     res.status(401);
-    return res.json({ error: 'Auth error - subscription',message:"missing token" });
+    return res.json({ error: "Auth error - subscription",message:"missing token" });
   }
 
   jwt.verify(token, jwtkey, (err, decoded) => {
     if (err) {
       res.status(401);
-      return res.json({ error: 'Auth error - subscription', message: err });
+      return res.json({ error: "Auth error - subscription", message: err });
     } else {
       next();
     }

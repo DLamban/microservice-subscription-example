@@ -13,9 +13,15 @@ api-gateway:4001
 subscription-microservice:4002
 email-microservice:4002
 ```
+## Authentication
 To access the microservices through the `api-gateway` is required authorization based in JWT.
 
-### The api gateway endpoints could be check in the swagger page: [http://localhost:4000/api-docs/]()
+Access token is served from two endpoints `http://localhost:4000/api/getAdminToken` and `http://localhost:4000/api/getUserToken`.
+
+Use the returned token as a Bearer token in further requests
+
+### The api gateway endpoints could be check in the swagger page: [http://localhost:4000/api-docs/]() 
+Swagger it's not fully configured and it can't handle authorization
 
 Api gateway has some simple business test that can be run with 
 ```$ npm  test```
@@ -32,7 +38,7 @@ Project structure:
 ├── commands
 │   └── init.sql
 ├── secrets
-│   └── password.txt
+│   └── dbpassword.txt
 │   └── jwttoken.txt
 ├── docker-compose.yaml
 └── README.md

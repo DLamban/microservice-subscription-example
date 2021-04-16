@@ -97,6 +97,6 @@ volumes:
   db-data:
 secrets:
   db-password:
-    file: db/password.txt
+    file: secrets/dbpassword.txt
   jwt-master-key:
     file: secrets/jwttoken.txt
